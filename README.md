@@ -15,6 +15,10 @@
 
 </div>
 
+<p align="center">
+  <img src="assets/SHG_AGENT.gif" alt="SHG Guardian AI Demo Dashboard" width="750" style="border-radius: 10px; box-shadow: 0 4px 20px rgba(0,0,0,0.15);">
+</p>
+
 ---
 
 ## 🎨 Overview & Project Vision
