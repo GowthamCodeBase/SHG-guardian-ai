@@ -27,3 +27,6 @@ ENV/
 Project_Guide/kaggle_capstone_brief.md
 Project_Guide/kaggle_writeup.md
 Project_Guide/Write-up.txt
+
+# Media source files
+assets/*.mp4
