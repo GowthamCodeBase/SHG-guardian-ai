@@ -1,0 +1,2 @@
+member_id,savings,loan_amount,outstanding_loan,monthly_due,actual_paid,missed_payments
+SHG001,10000,50000,45000,2000,500,4

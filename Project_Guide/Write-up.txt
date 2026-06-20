@@ -1,0 +1,102 @@
+================================================================================
+KAGGLE CAPSTONE SUBMISSION WRITEUP DATA
+================================================================================
+
+This file contains the exact copy-paste fields for your Kaggle Writeup form.
+Copy each section below into its corresponding input field in the Kaggle UI.
+
+================================================================================
+FIELD: Title (Limit: 80 characters)
+================================================================================
+SHG Guardian AI: Multi-Agent Risk Auditing System
+
+================================================================================
+FIELD: Subtitle (Limit: 140 characters)
+================================================================================
+A multi-agent platform for microfinance ledger validation, defaults prediction, and human-in-the-loop approvals.
+
+================================================================================
+FIELD: Submission Track
+================================================================================
+Freestyle
+
+================================================================================
+FIELD: Project Links
+================================================================================
+Link 1 URL: https://github.com/GowthamCodeBase/SHG-guardian-ai
+Link 1 Label: Public GitHub Repository
+
+Link 2 URL: https://huggingface.co/spaces/GowthamDeveloper/shg-guardian-ai
+Link 2 Label: Interactive Gradio Demo
+
+================================================================================
+FIELD: Media Gallery (YouTube Video & Screenshot)
+================================================================================
+Video: [Insert your YouTube URL here - 5 minutes or less]
+Images: [Upload a screenshot of the Analytics Dashboard tab or Ingest Ledger tab]
+
+================================================================================
+FIELD: Project Description (Limit: 2500 words)
+================================================================================
+### Executive Summary
+SHG Guardian AI is an enterprise-grade multi-agent financial risk and auditing platform designed for Self-Help Groups (SHGs) and microfinance institutions. Built by GowthamDeveloper as the Capstone Project for Kaggle’s 5-Day AI Agents: Intensive Vibe Coding Course with Google, the platform automates data validation, predicts loan default probabilities, flags bookkeeping anomalies, and routes reviews through a human-in-the-loop approval workflow. By decoupling auditing tasks into specialized, collaborating agents, the system achieves operational resilience, data security, and explainable AI insights.
+
+---
+
+### The Problem: Operational Vulnerabilities in Microfinance
+Self-Help Groups (SHGs) form the economic backbone of millions of households in emerging markets, yet their financial management relies on manual Excel spreadsheets. This operational model leads to:
+1. Delayed Risk Identification: Loan delinquency and default warning signals are often missed until it is too late for early intervention.
+2. Inconsistent Data and Fraud: Spreadsheet updates are prone to missing values, duplicate entries, negative balances, and unauthorized edits.
+3. Siloed Approvals: Communicating escalations between Field Officers (verifying data on the ground) and Regional Coordinators (approving credit) is slow and lacks a transparent audit trail.
+
+To protect the collective savings of community members, organizations need a smart, automated oversight system that validates ledger logs in real-time.
+
+---
+
+### The Solution: SHG Guardian AI
+Designed and engineered by GowthamDeveloper, SHG Guardian AI moves past rigid programming scripts and leverages an agentic architecture to solve these problems. The platform:
+* Parses raw monthly ledger CSVs, automatically identifying formatting errors and duplications.
+* Evaluates member risk scores (0-100) using multi-factor financial heuristics and SQLite historical records.
+* Predicts default probabilities based on savings-to-debt ratios and missed payments trends.
+* Pushes flagged high-risk accounts into an interactive Verification Queue for multi-level human reviews (Field Officer check followed by Regional Coordinator decision).
+* Answers natural language database queries (e.g., "Why is member SHG001 flagged?") through an intuitive AI Assistant.
+
+---
+
+### Multi-Agent System Architecture
+SHG Guardian AI operates on a clean Planner -> Worker -> Evaluator pattern. Instead of a single LLM processing data, the platform partitions complexity among six autonomous, specialized agents that communicate via a structured Agent-to-Agent (A2A) protocol:
+
+1. Planner Agent (Coordinator): Receives the input request, builds the audit execution plan, and schedules tasks for the workers.
+2. Anomaly Detection Agent (Worker): Screens records for data errors (e.g., negative savings, negative loans, duplicate member IDs, missing parameters, and repayment spikes).
+3. Risk Assessment Agent (Worker): Combines savings, debt ratios, and missed payments to assign a numerical risk score (0-100) and category (Low, Medium, High).
+4. Recovery Analysis Agent (Worker): Calculates individual collection rates, group recovery statistics, and overall financial summaries.
+5. Approval Agent (Worker): Reviews worker outputs and automatically logs high-risk records into the approvals queue.
+6. Evaluator Agent (Audit Control): Acts as the quality inspector. It validates that all workers completed their tasks, checks for data discrepancies, and outputs the final consensus report.
+
+---
+
+### Application of Key Course Concepts
+
+#### 1. Multi-Agent Design Pattern
+The system is built as a modular multi-agent system. Individual agent classes run asynchronously and exchange structured messages containing payload, sender, receiver, and task states, avoiding monolithic script crashes.
+
+#### 2. Agent Skills & Mathematical Tools
+Agents leverage custom tools to run reliable operations:
+* Calculator Tool: Ensures safe division, protecting the system from zero-division errors when monthly dues are zero.
+* Prediction Tool: Computes future default probabilities based on historical risk patterns and outstanding ratios.
+* Database Tool: Exposes SQLite transaction APIs to worker and chatbot agents.
+
+#### 3. Persistent SQLite Memory
+The system features dual-layer memory. Short-Term Memory (SessionMemory) isolates active file uploads and intermediate calculations during runtime. Long-Term Memory (DatabaseManager) maintains persistent SQLite tables tracking member profiles, historical ledgers, and auditor decisions.
+
+#### 4. Security & Safety Features
+Data integrity is protected via input bounds checking (flagging negative metrics) and SQL injection safeguards in the query portal. Furthermore, the system enforces a strict Human-in-the-Loop (HITL) architecture—decisions are escalated and logged but cannot be auto-finalized without auditor approval.
+
+#### 5. Local & Public Deployability
+The application is built using Gradio and Plotly, delivering a clean, professional, and responsive web dashboard that supports both light and dark modes natively. It is live-deployed on Hugging Face Spaces.
+
+---
+
+### Developer Branding: About GowthamDeveloper
+GowthamDeveloper is an AI software engineer specialized in building agentic workflows, LLM integrations, and robust enterprise applications. Focused on software craftsmanship and clean design, GowthamDeveloper created SHG Guardian AI to demonstrate how modern agent architectures can automate data validation and decision-making in high-stakes environments. This Capstone Project showcases the developer's ability to design, build, and deploy production-ready AI solutions.
+================================================================================
