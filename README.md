@@ -199,3 +199,4 @@ The project validates data inputs against the following edge-case ledger files i
 Developed with 💻 by **GowthamDeveloper** (June 2026).
 *   **GitHub**: [https://github.com/GowthamCodeBase](https://github.com/GowthamCodeBase)
 *   **Hugging Face Spaces Space**: [https://huggingface.co/spaces/GowthamDeveloper/shg-guardian-ai](https://huggingface.co/spaces/GowthamDeveloper/shg-guardian-ai)
+*   **Kaggle Write-Ups**: [[https://huggingface.co/spaces/GowthamDeveloper/shg-guardian-ai](https://www.kaggle.com/competitions/vibecoding-agents-capstone-project/writeups/new-writeup-1781946639171)]([https://huggingface.co/spaces/GowthamDeveloper/shg-guardian-ai](https://www.kaggle.com/competitions/vibecoding-agents-capstone-project/writeups/new-writeup-1781946639171))
