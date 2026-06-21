@@ -21,6 +21,9 @@
 <p align="center">
   <strong>🌐 Try the Live Interactive App: <a href="https://huggingface.co/spaces/GowthamDeveloper/shg-guardian-ai" target="_blank">huggingface.co/spaces/GowthamDeveloper/shg-guardian-ai</a></strong>
 </p>
+<p align="center">
+  <strong>🌐 Kaggle Write Ups <a href="[https://huggingface.co/spaces/GowthamDeveloper/shg-guardian-ai](https://www.kaggle.com/competitions/vibecoding-agents-capstone-project/writeups/new-writeup-1781946639171)" target="_blank">SHG Guardian AI: Multi-Agent Risk Auditing System</a></strong>
+</p>
 ---
 
 ## 🎨 Overview & Project Vision
