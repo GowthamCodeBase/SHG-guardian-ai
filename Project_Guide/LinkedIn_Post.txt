@@ -1,0 +1,29 @@
+🚀 I just completed the Capstone Project for Kaggle's "5-Day AI Agents Intensive Course" with Google, and I'm excited to share the results!
+
+For the past week, I've been deep in the world of Agentic AI—moving beyond single LLM prompts to design, build, and audit systems powered by autonomous cooperating agents. 
+
+To put these skills to the test, I built 🛡️ SHG Guardian AI — a multi-agent risk auditing and forecasting platform for microfinance institutions and Self-Help Groups (SHGs).
+
+💡 The Problem:
+Many community-led microfinance groups rely on manual ledger entry, leading to delayed default warnings, duplicate transactions, and human error that puts group savings at risk.
+
+🛠️ The Solution:
+I built an agentic application using a Planner -> Worker -> Evaluator pattern. Instead of one monolithic script, 6 specialized agents coordinate using a custom protocol to scan transactions and assess credit risk.
+
+Key Highlights of what I built:
+🤖 6 Asynchronous Cooperating Agents (Planner, Anomaly Detector, Risk Assessment, Recovery Analysis, Approval, and Evaluator).
+💾 SQLite Integration (Dual-layer short-term and persistent long-term memory for auditing).
+⚙️ Custom Tools (Calculator tool, database execution tool, and predictive risk scoring heuristic).
+⚖️ Human-in-the-Loop Safeguards (Flagged high-risk accounts are sent to a verification queue for Auditor approval).
+📊 Gradio & Plotly UI (A clean interactive analytics dashboard running live).
+
+Try the project out here:
+💻 GitHub Repository: https://github.com/GowthamCodeBase/SHG-guardian-ai
+🌐 Live Gradio App (Hugging Face Spaces): https://huggingface.co/spaces/GowthamDeveloper/shg-guardian-ai
+✍️ Kaggle Write-up: https://www.kaggle.com/competitions/vibecoding-agents-capstone-project/writeups/new-writeup-1781946639171
+
+A huge thanks to Google and Kaggle for this amazing intensive learning experience. 
+
+If you are looking for an AI engineer who can design and build robust, production-ready multi-agent workflows, let's connect! 
+
+#AIAgents #Python #GenerativeAI #FinTech #Gradio #SoftwareEngineering #Kaggle #GoogleAI #MachineLearning

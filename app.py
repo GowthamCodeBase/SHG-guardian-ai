@@ -21,7 +21,7 @@ workflow_manager = SHGWorkflowManager()
 
 # Global styling options
 theme = gr.themes.Soft(
-    primary_hue="teal",
+    primary_hue="blue",
     secondary_hue="sky",
     neutral_hue="slate",
     font=[gr.themes.GoogleFont("Outfit"), "sans-serif"]
@@ -29,6 +29,15 @@ theme = gr.themes.Soft(
 
 # Custom CSS for dark/light mode adaptable cards and badges
 custom_css = """
+:root, body, .dark {
+    --body-background-fill: #0f172a !important; /* Deep Dark */
+    --background-fill-primary: #0f172a !important;
+    --background-fill-secondary: #1e293b !important;
+    --block-background-fill: #1e293b !important;
+    --body-text-color: #f8fafc !important; /* Crisp White text */
+    --body-text-color-subdued: #94a3b8 !important; /* Light slate text */
+    --border-color-primary: #334155 !important; /* Dark border */
+}
 .metric-card {
     border-radius: 12px;
     padding: 16px;
@@ -81,6 +90,36 @@ custom_css = """
     font-weight: 600;
     display: inline-block;
 }
+.upload-card-header {
+    font-size: 1.4em;
+    font-weight: 700;
+    margin-bottom: 15px;
+    color: #f8fafc;
+    text-align: center;
+}
+.upload-card {
+    border-radius: 16px !important;
+    padding: 24px !important;
+    border: 1px solid var(--border-color-primary) !important;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.05) !important;
+    background: var(--block-background-fill) !important;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.upload-card:hover {
+    box-shadow: 0 15px 35px rgba(0,0,0,0.08) !important;
+    transform: translateY(-2px);
+}
+.run-btn {
+    background: linear-gradient(135deg, #4285F4 0%, #34A853 100%) !important;
+    border: none !important;
+    color: white !important;
+    font-size: 1.1em !important;
+    font-weight: 600 !important;
+    transition: opacity 0.2s ease !important;
+}
+.run-btn:hover {
+    opacity: 0.9 !important;
+}
 """
 
 def generate_kpis_html(report):
@@ -101,9 +140,9 @@ def generate_kpis_html(report):
             <div class="kpi-title">Total Members</div>
             <div class="kpi-value">{report.get("total_members", 0)}</div>
         </div>
-        <div class="metric-card" style="border-left: 4px solid #0d9488;">
+        <div class="metric-card" style="border-left: 4px solid #37BAE8;">
             <div class="kpi-title">Payment Collection Rate</div>
-            <div class="kpi-value" style="color: #0d9488;">{overall_rate:.1f}%</div>
+            <div class="kpi-value" style="color: #37BAE8;">{overall_rate:.1f}%</div>
             <div class="kpi-subtitle">Collected: ₹{total_coll:,.0f} / ₹{total_due:,.0f}</div>
         </div>
         <div class="metric-card" style="border-left: 4px solid #ef4444;">
@@ -135,61 +174,125 @@ def make_plotly_charts():
         fig_risk.update_layout(title="No data loaded")
         return fig_rec, fig_risk
 
-    # 1. Payment Recovery Comparison Bar Chart (Due vs Paid)
-    df = pd.DataFrame(ledger)
-    df["member_id"] = df["member_id"].astype(str)
+    try:
+        # 1. Payment Recovery Comparison Bar Chart (Due vs Paid)
+        df = pd.DataFrame(ledger)
+        if len(df) > 50:
+            df = df.head(50)
+        df["member_id"] = df["member_id"].astype(str)
+        
+        fig_rec = go.Figure()
+        
+        # Premium styling for Due
+        fig_rec.add_trace(go.Bar(
+            x=df["member_id"],
+            y=df["monthly_due"],
+            name="Target Due",
+            marker=dict(color="#1e293b", line=dict(color="#334155", width=1.5)),
+            hovertemplate="<b>%{x}</b><br>Target Due: ₹%{y:,.0f}<extra></extra>"
+        ))
+        
+        # Premium styling for Paid
+        fig_rec.add_trace(go.Bar(
+            x=df["member_id"],
+            y=df["actual_paid"],
+            name="Amount Paid",
+            marker=dict(
+                color="#37BAE8", 
+                line=dict(color="#118AB2", width=1.5),
+                pattern_shape=""
+            ),
+            hovertemplate="<b>%{x}</b><br>Amount Paid: ₹%{y:,.0f}<extra></extra>"
+        ))
+        
+        fig_rec.update_layout(
+            title=dict(
+                text="Repayment Recovery Analytics" if len(pd.DataFrame(ledger)) > 50 else "Repayment Recovery Analytics",
+                font=dict(size=20, color="#f8fafc", family="Outfit")
+            ),
+            barmode="group",
+            bargap=0.2,
+            bargroupgap=0.1,
+            xaxis=dict(
+                title="",
+                tickfont=dict(color="#94a3b8"),
+                showgrid=False
+            ),
+            yaxis=dict(
+                title="Amount (₹)",
+                tickfont=dict(color="#94a3b8"),
+                gridcolor="#334155",
+                zerolinecolor="#334155"
+            ),
+            template="plotly_dark",
+            paper_bgcolor="rgba(0,0,0,0)",
+            plot_bgcolor="rgba(0,0,0,0)",
+            legend=dict(
+                orientation="h",
+                yanchor="bottom",
+                y=1.02,
+                xanchor="right",
+                x=1,
+                font=dict(color="#cbd5e1")
+            ),
+            margin=dict(l=40, r=20, t=80, b=40),
+            hovermode="x unified"
+        )
     
-    fig_rec = go.Figure()
-    fig_rec.add_trace(go.Bar(
-        x=df["member_id"],
-        y=df["monthly_due"],
-        name="Repayment Amount Due",
-        marker_color="#94a3b8"  # Neutral Slate Gray
-    ))
-    fig_rec.add_trace(go.Bar(
-        x=df["member_id"],
-        y=df["actual_paid"],
-        name="Actual Amount Paid",
-        marker_color="#0d9488"  # Teal
-    ))
-    fig_rec.update_layout(
-        title="Repayment Recovery Comparison: Amount Due vs. Paid",
-        barmode="group",
-        xaxis_title="Member ID",
-        yaxis_title="Amount (₹)",
-        template="none",
-        font=dict(color="#64748b"), # Readable mid-tone gray for both themes
-        paper_bgcolor="rgba(0,0,0,0)",
-        plot_bgcolor="rgba(0,0,0,0)",
-        margin=dict(l=20, r=20, t=40, b=20)
-    )
+        # 2. Risk Distribution Donut Chart (Modern)
+        risk_cats = [data.get("category", "LOW") for data in risk_scores.values()]
+        risk_df = pd.DataFrame(risk_cats, columns=["Risk"])
+        risk_counts = risk_df["Risk"].value_counts().reset_index()
+        risk_counts.columns = ["Risk Category", "Count"]
+        
+        # Sort so it's consistently ordered
+        sorter = ["HIGH", "MEDIUM", "LOW"]
+        risk_counts["Risk Category"] = pd.Categorical(risk_counts["Risk Category"], categories=sorter, ordered=True)
+        risk_counts = risk_counts.sort_values("Risk Category")
+        
+        color_map = {"LOW": "#10b981", "MEDIUM": "#f59e0b", "HIGH": "#ef4444"}
+        
+        fig_risk = px.pie(
+            risk_counts,
+            values="Count",
+            names="Risk Category",
+            color="Risk Category",
+            color_discrete_map=color_map,
+            hole=0.6, # Make it a premium donut chart
+        )
+        
+        # Add center text
+        total_risk = risk_counts["Count"].sum()
+        fig_risk.add_annotation(
+            text=f"<b>{total_risk}</b><br><span style='font-size:12px;color:#94a3b8'>Members</span>",
+            x=0.5, y=0.5, font_size=24, font_color="#f8fafc", showarrow=False
+        )
 
-    # 2. Risk Distribution Pie Chart
-    risk_cats = [data.get("category", "LOW") for data in risk_scores.values()]
-    risk_df = pd.DataFrame(risk_cats, columns=["Risk"])
-    risk_counts = risk_df["Risk"].value_counts().reset_index()
-    risk_counts.columns = ["Risk Category", "Count"]
-    
-    color_map = {"LOW": "#22c55e", "MEDIUM": "#eab308", "HIGH": "#ef4444"}
-    
-    fig_risk = px.pie(
-        risk_counts,
-        values="Count",
-        names="Risk Category",
-        color="Risk Category",
-        color_discrete_map=color_map,
-        title="Portfolio Risk Level Categories"
-    )
-    fig_risk.update_traces(textposition='inside', textinfo='percent+label')
-    fig_risk.update_layout(
-        template="none",
-        font=dict(color="#64748b"),
-        paper_bgcolor="rgba(0,0,0,0)",
-        plot_bgcolor="rgba(0,0,0,0)",
-        margin=dict(l=20, r=20, t=40, b=20)
-    )
-
-    return fig_rec, fig_risk
+        fig_risk.update_traces(
+            textposition='outside', 
+            textinfo='percent+label',
+            hovertemplate="<b>%{label} Risk</b><br>Count: %{value}<br>Share: %{percent}<extra></extra>",
+            marker=dict(line=dict(color='#0f172a', width=3)),
+            pull=[0.05 if cat == "HIGH" else 0 for cat in risk_counts["Risk Category"]] # Pull HIGH risk out slightly
+        )
+        
+        fig_risk.update_layout(
+            title=dict(
+                text="Portfolio Risk Distribution",
+                font=dict(size=20, color="#f8fafc", family="Outfit")
+            ),
+            template="plotly_dark",
+            paper_bgcolor="rgba(0,0,0,0)",
+            plot_bgcolor="rgba(0,0,0,0)",
+            showlegend=False,
+            margin=dict(l=20, r=20, t=80, b=40)
+        )
+        return fig_rec, fig_risk
+    except Exception as e:
+        print(f"Error generating Plotly charts: {e}")
+        fig_err = go.Figure()
+        fig_err.update_layout(title=f"Error rendering chart: {e}")
+        return fig_err, fig_err
 
 def load_dataframes():
     """Generates detailed table with plain English column headers."""
@@ -456,35 +559,49 @@ def chatbot_interface(message, history):
 
 # Build Gradio UI layout
 with gr.Blocks(title="SHG Guardian AI Dashboard") as demo:
-    gr.HTML("<div style='text-align: center; margin-bottom: 28px;'>"
-            "<h1 style='color: var(--body-text-color); margin-bottom: 4px; font-size: 2.4em; font-weight: 800; letter-spacing: -0.025em;'>SHG GUARDIAN AI</h1>"
-            "<p style='color: var(--body-text-color-subdued); font-size: 1.1em; font-weight: 500;'>"
-            "Multi-Agent Risk Assessment & Automated Auditing Workflow"
-            "</p></div>")
+    gr.HTML("""
+    <div style='position: relative; text-align: center; margin-bottom: 20px; padding: 25px; border-radius: 16px; background: linear-gradient(145deg, rgba(66,133,244,0.1) 0%, rgba(52,168,83,0.1) 100%); border: 1px solid var(--border-color-primary); box-shadow: 0 8px 24px rgba(0,0,0,0.2);'>
+        <div style='display: flex; justify-content: center; align-items: center; gap: 35px; margin-bottom: 18px;'>
+            <img src='https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg' alt='Google' width='120' style='filter: drop-shadow(0px 2px 4px rgba(0,0,0,0.1));'/>
+            <span style='font-size: 28px; color: #cbd5e1; font-weight: 300;'>|</span>
+            <img src='https://upload.wikimedia.org/wikipedia/commons/7/7c/Kaggle_logo.png' alt='Kaggle' width='120' style='filter: drop-shadow(0px 2px 4px rgba(0,0,0,0.1));'/>
+        </div>
+        <h1 style='background: linear-gradient(90deg, #4285F4, #34A853, #FBBC05, #EA4335); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 8px; font-size: 2.8em; font-weight: 900; letter-spacing: -0.02em;'>SHG GUARDIAN AI</h1>
+        <p style='color: var(--body-text-color-subdued); font-size: 1.15em; font-weight: 600; text-transform: uppercase; letter-spacing: 0.15em;'>
+            Capstone Project: Multi-Agent Risk Assessment & Auditing
+        </p>
+    </div>
+    """)
             
     with gr.Tabs():
         
         # TAB 1: Ledger Ingestion / Upload
         with gr.TabItem("Ledger Upload"):
-            with gr.Row():
-                with gr.Column(scale=1):
-                    gr.Markdown("### Upload Monthly Record File")
-                    file_input = gr.File(label="Select member list (.csv)", file_types=[".csv"])
-                    month_input = gr.Textbox(label="Reporting Month (e.g. 2026-06)", value="2026-06", placeholder="YYYY-MM")
-                    run_btn = gr.Button("Start Automated Review", variant="primary")
-                    
-                with gr.Column(scale=2):
-                    gr.Markdown("### Live System Work Logs")
-                    log_output = gr.TextArea(
-                        label="AI agent activity logs (Planner, Evaluator, and Workers)", 
-                        interactive=False, 
-                        lines=12,
-                        max_lines=15,
-                        autoscroll=True
-                    )
+            with gr.Row(equal_height=True):
+                with gr.Column(scale=1, min_width=600):
+                    gr.HTML("<div class='upload-card-header'>📁 Start Audit Process</div>")
+                    with gr.Group(elem_classes="upload-card"):
+                        file_input = gr.File(label="Upload Member Ledger (.csv)", file_types=[".csv"])
+                        
+                        sample_files = [os.path.join("Sample_test_dat", f) for f in sorted(os.listdir("Sample_test_dat")) if f.endswith('.csv')]
+                        if sample_files:
+                            gr.Examples(examples=sample_files, inputs=file_input, label="⚡ Quick Start: Choose a Capstone Benchmark Dataset", examples_per_page=6)
+                            
+                        with gr.Row():
+                            month_input = gr.Textbox(label="Reporting Month", value="2026-06", placeholder="YYYY-MM", scale=1)
+                            run_btn = gr.Button("🚀 Run Multi-Agent Audit", variant="primary", scale=2, elem_classes="run-btn")
             
             with gr.Row():
-                status_md = gr.Markdown("### Pipeline Status: Awaiting upload file...")
+                status_md = gr.Markdown("### ⏳ Pipeline Status: Ready for upload")
+                
+            with gr.Accordion("🔍 View Live Agent System Logs", open=False):
+                log_output = gr.TextArea(
+                    label="Agent Activity Trace (Planner, Workers, Evaluator)", 
+                    interactive=False, 
+                    lines=10,
+                    max_lines=15,
+                    autoscroll=True
+                )
 
         # TAB 2: Analytics Dashboard
         with gr.TabItem("Analytics Dashboard"):
